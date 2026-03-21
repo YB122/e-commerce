@@ -1,5 +1,4 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
 import ThemeDark from "./../ThemeDark/page";
 import Link from "next/link";
@@ -32,14 +31,13 @@ import tokenSlice, {
   removeToken,
   setToken,
 } from "../../../redux/features/tokenSlice";
-import { RootState } from "../../../redux/types";
 import { tokenState } from "@/redux/store";
 export default function NavBar({
   logo = {
-    url: "https://www.shadcnblocks.com",
+    url: "/",
     src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
     alt: "logo",
-    title: "Shadcnblocks.com",
+    title: "Shop Now",
   },
   menu = [
     { title: "Home", url: "/" },
@@ -130,7 +128,7 @@ export default function NavBar({
   }
   return (
     <section className={cn("py-4", className)}>
-      <div className="container">
+      <div className="container mx-auto ">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">

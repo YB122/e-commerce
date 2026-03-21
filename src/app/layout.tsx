@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Raleway } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Footer from "./_components/Footer/page";
+import { EcommerceFooter1 } from "./_components/Footer/page";
 import NavBar from "./_components/NavBar/page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -54,7 +54,8 @@ export default function RootLayout({
             <div className="min-h-[70vh] flex justify-center my-20">
               {children}
             </div>
-            <Footer />
+            {/* <Footer /> */}
+            <EcommerceFooter1 />
           </StoreProvider>
           <Toaster />
         </ThemeProvider>
