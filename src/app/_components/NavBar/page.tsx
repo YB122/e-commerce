@@ -1,5 +1,5 @@
 "use client";
-import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
+import { Book, Menu, Sunset, Trees, Zap, ShoppingCart } from "lucide-react";
 import ThemeDark from "./../ThemeDark/page";
 import Link from "next/link";
 // Zap;
@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -32,6 +33,7 @@ import tokenSlice, {
   setToken,
 } from "../../../redux/features/tokenSlice";
 import { tokenState } from "@/redux/store";
+import { RootState } from "@/redux/store";
 export default function NavBar({
   logo = {
     url: "/",
@@ -121,6 +123,9 @@ export default function NavBar({
   const userToken = useSelector((state: tokenState) => {
     return state.tokenSlice.token;
   });
+  const cartItems = useSelector(
+    (state: RootState) => state.cartSlice.totalItems,
+  );
   dispatch(setToken());
   function signOut() {
     localStorage.removeItem("token");
@@ -151,8 +156,18 @@ export default function NavBar({
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <ThemeDark />
+            <Link href="/cart" className="relative">
+              <Button variant="outline" size="icon">
+                <ShoppingCart className="size-4" />
+                {cartItems > 0 && (
+                  <Badge className="absolute -top-2 -right-2 min-w-[20px] h-5 flex items-center justify-center p-0 text-xs">
+                    {cartItems}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
             {userToken ? (
               <div className="flex gap-2">
                 <Button
@@ -207,6 +222,16 @@ export default function NavBar({
                         />
                       </Link>
                       <ThemeDark />
+                      <Link href="/cart" className="relative">
+                        <Button variant="outline" size="icon">
+                          <ShoppingCart className="size-4" />
+                          {cartItems > 0 && (
+                            <Badge className="absolute -top-2 -right-2 min-w-[20px] h-5 flex items-center justify-center p-0 text-xs">
+                              {cartItems}
+                            </Badge>
+                          )}
+                        </Button>
+                      </Link>
                     </div>
                   </SheetTitle>
                 </SheetHeader>
