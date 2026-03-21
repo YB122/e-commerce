@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
 import ThemeDark from "./../ThemeDark/page";
 import Link from "next/link";
@@ -27,6 +27,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useDispatch, useSelector } from "react-redux";
+import tokenSlice, {
+  removeToken,
+  setToken,
+} from "../../../redux/features/tokenSlice";
+import { RootState } from "../../../redux/types";
+import { tokenState } from "@/redux/store";
 export default function NavBar({
   logo = {
     url: "https://www.shadcnblocks.com",
@@ -35,7 +42,7 @@ export default function NavBar({
     title: "Shadcnblocks.com",
   },
   menu = [
-    { title: "Home", url: "#" },
+    { title: "Home", url: "/" },
     {
       title: "Products",
       url: "#",
@@ -98,12 +105,12 @@ export default function NavBar({
       ],
     },
     {
-      title: "Pricing",
-      url: "#",
+      title: "Categories",
+      url: "/categories",
     },
     {
-      title: "Blog",
-      url: "#",
+      title: "Products",
+      url: "/products",
     },
   ],
   auth = {
@@ -112,6 +119,15 @@ export default function NavBar({
   },
   className,
 }: Navbar1Props) {
+  const dispatch = useDispatch();
+  const userToken = useSelector((state: tokenState) => {
+    return state.tokenSlice.token;
+  });
+  dispatch(setToken());
+  function signOut() {
+    localStorage.removeItem("token");
+    dispatch(removeToken());
+  }
   return (
     <section className={cn("py-4", className)}>
       <div className="container">
@@ -139,12 +155,27 @@ export default function NavBar({
           </div>
           <div className="flex gap-2">
             <ThemeDark />
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
+            {userToken ? (
+              <div className="flex gap-2">
+                <Button
+                  className="rounded-full"
+                  variant="destructive"
+                  size="sm"
+                  onClick={signOut}
+                >
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={auth.login.url}>{auth.login.title}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </nav>
 
@@ -190,14 +221,27 @@ export default function NavBar({
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
-                  <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
-                  </div>
+                  {userToken ? (
+                    <div className="flex gap-2">
+                      <Button
+                        className="rounded-full"
+                        variant="destructive"
+                        size="sm"
+                        onClick={signOut}
+                      >
+                        Sign Out
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Button asChild variant="outline" size="sm">
+                        <Link href={auth.login.url}>{auth.login.title}</Link>
+                      </Button>
+                      <Button asChild size="sm">
+                        <Link href={auth.signup.url}>{auth.signup.title}</Link>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
@@ -226,11 +270,13 @@ const renderMenuItem = (item: MenuItem) => {
 
   return (
     <NavigationMenuItem key={item.title}>
-      <NavigationMenuLink
-        href={item.url}
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-      >
-        {item.title}
+      <NavigationMenuLink asChild>
+        <Link
+          href={item.url}
+          className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+        >
+          {item.title}
+        </Link>
       </NavigationMenuLink>
     </NavigationMenuItem>
   );

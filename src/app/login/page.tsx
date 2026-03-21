@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -11,7 +11,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import LoginFetch from "../_api/login/Login.Fetch";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { store } from "../../redux/store";
+import { setToken } from "@/redux/features/tokenSlice";
 
 export const title = "Login Form";
 
@@ -22,6 +29,10 @@ const formSchema = z.object({
   }),
 });
 export default function Login() {
+  const dispatch = useDispatch();
+  const [hide, setHide] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,8 +41,20 @@ export default function Login() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      const check = await LoginFetch(values);
+
+      if (check) {
+        dispatch(setToken());
+        router.replace("/");
+      } else {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -45,6 +68,7 @@ export default function Login() {
         </div>
         <FieldGroup>
           <Controller
+            disabled={isLoading}
             name="email"
             control={form.control}
             render={({ field, fieldState }) => (
@@ -65,6 +89,7 @@ export default function Login() {
             )}
           />
           <Controller
+            disabled={isLoading}
             name="password"
             control={form.control}
             render={({ field, fieldState }) => (
@@ -78,14 +103,27 @@ export default function Login() {
                     Forgot password?
                   </Link>
                 </div>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  className="bg-background"
-                  placeholder="Enter your password"
-                  type="password"
-                />
+                <div className="relative">
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    className="bg-background pr-10"
+                    placeholder="Enter your password"
+                    type={hide ? "password" : "text"}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setHide(!hide)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {hide ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -93,8 +131,8 @@ export default function Login() {
             )}
           />
         </FieldGroup>
-        <Button className="w-full" type="submit">
-          Sign In
+        <Button className="w-full" type="submit" disabled={isLoading}>
+          Sign In {isLoading ? <Spinner data-icon="inline-start" /> : null}
         </Button>
         <p className="text-center text-sm text-muted-foreground">
           Don't have an account?

@@ -6,8 +6,9 @@ import Footer from "./_components/Footer/page";
 import NavBar from "./_components/NavBar/page";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-const raleway = Raleway({ subsets: ["latin"], variable: "--font-sans" });
+import StoreProvider from "./StoreProvider";
 
+const raleway = Raleway({ subsets: ["latin"], variable: "--font-sans" });
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -48,11 +49,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavBar />
-          <div className="min-h-screen flex justify-center my-10">
-            {children}
-          </div>
-          <Footer />
+          <StoreProvider>
+            <NavBar />
+            <div className="min-h-[70vh] flex justify-center my-20">
+              {children}
+            </div>
+            <Footer />
+          </StoreProvider>
           <Toaster />
         </ThemeProvider>
       </body>

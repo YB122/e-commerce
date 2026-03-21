@@ -1,11 +1,12 @@
-import brandsFetch from "./_api/brands/brands.fetch";
-import { brandType } from "./_api/brands/interface";
-import CategoriesFetch from "./_api/categories/categories.fetch";
-import productFetch from "./_api/products/product.fetch";
-import { productType } from "./_components/ProductsCard/interface";
-import ProductsCard from "./_components/ProductsCard/ProductsCard";
+import React from "react";
+import { productType } from "../_components/ProductsCard/interface";
+import ProductsCard from "../_components/ProductsCard/ProductsCard";
+import productFetch from "../_api/products/product.fetch";
+import CategoriesFetch from "../_api/categories/categories.fetch";
+import { brandType } from "../_api/brands/interface";
+import brandsFetch from "../_api/brands/brands.fetch";
 
-export default async function Home() {
+export default async function Products() {
   let productsData: productType[] = [];
   productsData = await productFetch();
   let categoriesData: categoryType[] = [];
