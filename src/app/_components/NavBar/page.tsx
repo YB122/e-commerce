@@ -120,9 +120,7 @@ export default function NavBar({
   className,
 }: Navbar1Props) {
   const dispatch = useDispatch();
-  const userToken = useSelector((state: tokenState) => {
-    return state.tokenSlice.token;
-  });
+  const userToken = useSelector((state: tokenState) => state.tokenSlice.token);
   const cartItems = useSelector(
     (state: RootState) => state.cartSlice.totalItems,
   );

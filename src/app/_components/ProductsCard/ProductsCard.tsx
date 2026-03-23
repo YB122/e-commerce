@@ -14,7 +14,7 @@ import { Star, Heart } from "lucide-react";
 import Link from "next/link";
 import { productType } from "./interface";
 
-export default function ProductsCard(props) {
+export default function ProductsCard(props: any) {
   return (
     <Card className="overflow-hidden flex flex-col h-full group">
       <Link href={`/products/${props.product._id}`}>

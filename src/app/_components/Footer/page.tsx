@@ -259,7 +259,8 @@ const EcommerceFooter1 = ({
                 className="h-6"
               />
             </div>
-            <Select defaultValue="english" size="sm">
+            <Select defaultValue="english">
+              {/** size="sm" */}
               <SelectTrigger className="h-8 w-24 text-xs">
                 <SelectValue placeholder="Select a Language..." />
               </SelectTrigger>

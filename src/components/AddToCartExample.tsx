@@ -31,11 +31,11 @@ export default function AddToCartExample({ product }: AddToCartExampleProps) {
 }
 
 // Example usage:
-// <AddToCartExample 
+// <AddToCartExample
 //   product={{
-//     id: "1", 
-//     name: "Sample Product", 
+//     id: "1",
+//     name: "Sample Product",
 //     price: 29.99,
 //     image: "/product-image.jpg"
-//   }} 
+//   }}
 // />
